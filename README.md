@@ -1,0 +1,1 @@
+# QR-Reader-React-Native
