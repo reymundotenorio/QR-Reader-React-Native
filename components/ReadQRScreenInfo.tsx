@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Button, Dimensions, TouchableOpacity } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
+
+import Torch from 'react-native-torch';
+
 import { Path, Svg, SvgProps } from 'react-native-svg';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
@@ -37,6 +40,7 @@ export default function ReadQRScreenInfo() {
   };
 
   const toggleFlash = () => {
+    Torch.switchState(!flash);
     setFlash(!flash);
   };
 
