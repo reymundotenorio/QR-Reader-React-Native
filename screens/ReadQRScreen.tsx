@@ -1,6 +1,8 @@
 import * as React from 'react';
 import ReadQRScreenInfo from '../components/ReadQRScreenInfo';
 
-export default function ReadQRScreen({ navigation }) {
-  return <ReadQRScreenInfo navigate={navigation.navigate} />;
+import { NavigationProps } from '../types';
+
+export default function ReadQRScreen({ navigation }: NavigationProps) {
+  return <ReadQRScreenInfo navigation={navigation} />;
 }

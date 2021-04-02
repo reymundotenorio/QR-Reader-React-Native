@@ -20,3 +20,11 @@ export type handleBarCodeScannedProps = {
   type: string;
   data: string;
 };
+
+interface Navigation {
+  navigate: Function;
+}
+
+export type NavigationProps = {
+  navigation: Navigation;
+};

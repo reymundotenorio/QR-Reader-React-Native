@@ -1,28 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Button, Dimensions, Alert } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
-
 import { Path, Svg, SvgProps } from 'react-native-svg';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
 
 import { Text, View } from './Themed';
 import { MonoText } from './StyledText';
 
-import Colors from '../constants/Colors';
-import useColorScheme from '../hooks/useColorScheme';
-
 const { width } = Dimensions.get('window');
 const qrSize = width * 0.7;
 
-import { handleBarCodeScannedProps } from '../types';
+import { NavigationProps, handleBarCodeScannedProps } from '../types';
 
-export default function ReadQRScreenInfo({ navigate }) {
+export default function ReadQRScreenInfo({ navigation }: NavigationProps) {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [scanned, setScanned] = useState<boolean>(false);
-
-  const colorScheme = useColorScheme();
-  const tabBackgroundColor = Colors[colorScheme].tabBackgroundColor;
 
   useEffect(() => {
     (async () => {
@@ -33,7 +25,7 @@ export default function ReadQRScreenInfo({ navigate }) {
 
   const handleBarCodeScanned = ({ type, data }: handleBarCodeScannedProps) => {
     setScanned(true);
-    QRDetected(type, data, setScanned, navigate);
+    QRDetected(type, data, setScanned, navigation.navigate);
     // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
   };
 
