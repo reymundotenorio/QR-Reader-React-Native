@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Button, Dimensions, TouchableOpacity } from 'react-native';
+import { StyleSheet, Button, Dimensions, Alert } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
-
-import { Camera } from 'expo-camera';
-const flashOff = Camera.Constants.FlashMode.off;
-const flashOn = Camera.Constants.FlashMode.torch;
 
 import { Path, Svg, SvgProps } from 'react-native-svg';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -21,10 +17,9 @@ const qrSize = width * 0.7;
 
 import { handleBarCodeScannedProps } from '../types';
 
-export default function ReadQRScreenInfo() {
+export default function ReadQRScreenInfo({ navigate }) {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [scanned, setScanned] = useState<boolean>(false);
-  const [flash, setFlash] = useState<string | number | undefined>(flashOff);
 
   const colorScheme = useColorScheme();
   const tabBackgroundColor = Colors[colorScheme].tabBackgroundColor;
@@ -38,15 +33,8 @@ export default function ReadQRScreenInfo() {
 
   const handleBarCodeScanned = ({ type, data }: handleBarCodeScannedProps) => {
     setScanned(true);
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
-  };
-
-  const toggleFlash = () => {
-    if (flash === flashOn) {
-      setFlash(flashOff);
-    } else {
-      setFlash(flashOn);
-    }
+    QRDetected(type, data, setScanned, navigate);
+    // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
   };
 
   if (hasPermission === null) {
@@ -73,29 +61,12 @@ export default function ReadQRScreenInfo() {
         justifyContent: 'flex-end',
       }}
     >
-      <Camera
-        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-        barCodeScannerSettings={{
-          barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr],
-        }}
-        autoFocus={Camera.Constants.AutoFocus.on}
-        type={Camera.Constants.Type.back}
-        flashMode={flash}
-        style={[StyleSheet.absoluteFillObject, stylesQRReader.container]}
-      >
-        <MonoText style={stylesQRReader.title}>Scan your QR code</MonoText>
-        <QRFocusIcon style={stylesQRReader.qrFocusIcon} />
-        <TouchableOpacity onPress={toggleFlash} style={stylesQRReader.flashButton}>
-          {flash === flashOn && <FlashIcon name='flash' color={'#FFFFFF'} />}
-          {flash === flashOff && <FlashIcon name='flash-outline' color={'#FFFFFF'} />}
-        </TouchableOpacity>
-      </Camera>
-
-      {/* <BarCodeScanner onBarCodeScanned={scanned ? undefined : handleBarCodeScanned} style={[StyleSheet.absoluteFillObject, stylesQRReader({ tabBackgroundColor }).container]}>
-        <MonoText style={stylesQRReader.title}>Scan your QR code</MonoText>
-        <QRFocusIcon style={stylesQRReader.qrFocusIcon} />
-      </BarCodeScanner> */}
-      {scanned && <Button title={'Scan Again'} onPress={() => setScanned(false)} />}
+      {hasPermission && (
+        <BarCodeScanner onBarCodeScanned={scanned ? undefined : handleBarCodeScanned} barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]} style={[StyleSheet.absoluteFillObject, stylesQRReader.container]}>
+          <MonoText style={stylesQRReader.title}>Scan your QR code</MonoText>
+          <QRFocusIcon style={stylesQRReader.qrFocusIcon} />
+        </BarCodeScanner>
+      )}
     </View>
   );
 }
@@ -111,8 +82,31 @@ function QRFocusIcon(props: SvgProps) {
   );
 }
 
-function FlashIcon(props: { name: React.ComponentProps<typeof MaterialCommunityIcons>['name']; color: string }) {
-  return <MaterialCommunityIcons size={30} style={{ marginBottom: 0 }} {...props} />;
+function QRDetected(type: string, data: string, setScanned: Function, navigate: Function) {
+  Alert.alert(
+    'QR Code detected',
+    `${data}`,
+    [
+      {
+        text: 'Read again',
+        onPress: () => setScanned(false),
+        style: 'cancel',
+      },
+      {
+        text: 'Save information',
+        onPress: () => {
+          navigate('ListQR');
+
+          setTimeout(() => {
+            setScanned(false);
+          }, 1000);
+
+          // Save in Redux and redirect to list
+        },
+      },
+    ],
+    { cancelable: false }
+  );
 }
 
 const stylesQRReader = StyleSheet.create({

@@ -11,7 +11,7 @@ export default {
 
     tabBackgroundColor: '#FFFFFF',
     tabActiveColor: '#6200ee',
-    tabInactive: 'rgba(255,255,255,0.5)',
+    tabInactive: 'rgba(0,0,0,0.5)',
   },
   dark: {
     text: '#F8F8FA',
