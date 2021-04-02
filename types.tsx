@@ -15,3 +15,12 @@ export type ReadQRParamList = {
 export type ListQRParamList = {
   ListQRScreen: undefined;
 };
+
+export type handleBarCodeScannedProps = {
+  type: string;
+  data: string;
+};
+
+export type stylesQRReaderProps = {
+  tabBackgroundColor?: string;
+};
