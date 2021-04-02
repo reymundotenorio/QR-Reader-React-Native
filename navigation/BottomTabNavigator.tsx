@@ -1,35 +1,53 @@
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
-import TabOneScreen from '../screens/TabOneScreen';
-import TabTwoScreen from '../screens/TabTwoScreen';
-import { BottomTabParamList, TabOneParamList, TabTwoParamList } from '../types';
+import ReadQRScreen from '../screens/ReadQRScreen';
+import ListQRScreen from '../screens/ListQRScreen';
+import { BottomTabParamList, ReadQRParamList, ListQRParamList } from '../types';
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
 export default function BottomTabNavigator() {
   const colorScheme = useColorScheme();
+  const tabBackgroundColor = colorScheme === 'dark' ? '#0D1117' : '#FFFFFF';
+  const tabIconColor = colorScheme === 'dark' ? '#F8A728' : '#1167B1';
+  const tabLabelColor = colorScheme === 'dark' ? '#FFFFFF' : '#000';
+  const tabActiveBackgroundColor = colorScheme === 'dark' ? '#080a0e' : '#e6e6e6';
 
   return (
     <BottomTab.Navigator
-      initialRouteName="TabOne"
-      tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}>
+      initialRouteName='ReadQR'
+      tabBarOptions={{
+        activeBackgroundColor: tabActiveBackgroundColor,
+        activeTintColor: tabLabelColor,
+        inactiveTintColor: tabLabelColor,
+        labelPosition: 'below-icon',
+        style: { backgroundColor: tabBackgroundColor, height: 65 },
+        labelStyle: {
+          fontSize: 12,
+          paddingTop: 2,
+          paddingBottom: 5,
+        },
+      }}
+    >
       <BottomTab.Screen
-        name="TabOne"
-        component={TabOneNavigator}
+        name='ReadQR'
+        component={ReadQRNavigator}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,
+          tabBarLabel: 'Read QR',
+          tabBarIcon: () => <TabBarIcon name='qrcode-scan' color={tabIconColor} />,
         }}
       />
       <BottomTab.Screen
-        name="TabTwo"
-        component={TabTwoNavigator}
+        name='ListQR'
+        component={ListQRNavigator}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,
+          tabBarLabel: 'List QR',
+          tabBarIcon: () => <TabBarIcon name='format-list-text' color={tabIconColor} />,
         }}
       />
     </BottomTab.Navigator>
@@ -38,36 +56,28 @@ export default function BottomTabNavigator() {
 
 // You can explore the built-in icon families and icons on the web at:
 // https://icons.expo.fyi/
-function TabBarIcon(props: { name: React.ComponentProps<typeof Ionicons>['name']; color: string }) {
-  return <Ionicons size={30} style={{ marginBottom: -3 }} {...props} />;
+function TabBarIcon(props: { name: React.ComponentProps<typeof MaterialCommunityIcons>['name']; color: string }) {
+  return <MaterialCommunityIcons size={30} style={{ marginBottom: -3 }} {...props} />;
 }
 
 // Each tab has its own navigation stack, you can read more about this pattern here:
 // https://reactnavigation.org/docs/tab-based-navigation#a-stack-navigator-for-each-tab
-const TabOneStack = createStackNavigator<TabOneParamList>();
+const ReadQRStack = createStackNavigator<ReadQRParamList>();
 
-function TabOneNavigator() {
+function ReadQRNavigator() {
   return (
-    <TabOneStack.Navigator>
-      <TabOneStack.Screen
-        name="TabOneScreen"
-        component={TabOneScreen}
-        options={{ headerTitle: 'Tab One Title' }}
-      />
-    </TabOneStack.Navigator>
+    <ReadQRStack.Navigator>
+      <ReadQRStack.Screen name='ReadQRScreen' component={ReadQRScreen} options={{ headerTitle: 'Read QR code' }} />
+    </ReadQRStack.Navigator>
   );
 }
 
-const TabTwoStack = createStackNavigator<TabTwoParamList>();
+const ListQRStack = createStackNavigator<ListQRParamList>();
 
-function TabTwoNavigator() {
+function ListQRNavigator() {
   return (
-    <TabTwoStack.Navigator>
-      <TabTwoStack.Screen
-        name="TabTwoScreen"
-        component={TabTwoScreen}
-        options={{ headerTitle: 'Tab Two Title' }}
-      />
-    </TabTwoStack.Navigator>
+    <ListQRStack.Navigator>
+      <ListQRStack.Screen name='ListQRScreen' component={ListQRScreen} options={{ headerTitle: 'List QR code' }} />
+    </ListQRStack.Navigator>
   );
 }
