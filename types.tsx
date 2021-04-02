@@ -20,7 +20,3 @@ export type handleBarCodeScannedProps = {
   type: string;
   data: string;
 };
-
-export type stylesQRReaderProps = {
-  tabBackgroundColor?: string;
-};
