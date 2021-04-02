@@ -1,9 +1,8 @@
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
 
-import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import ReadQRScreen from '../screens/ReadQRScreen';
 import ListQRScreen from '../screens/ListQRScreen';
@@ -14,17 +13,17 @@ const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 export default function BottomTabNavigator() {
   const colorScheme = useColorScheme();
   const tabBackgroundColor = colorScheme === 'dark' ? '#0D1117' : '#FFFFFF';
-  const tabIconColor = colorScheme === 'dark' ? '#F8A728' : '#1167B1';
-  const tabLabelColor = colorScheme === 'dark' ? '#FFFFFF' : '#000';
-  const tabActiveBackgroundColor = colorScheme === 'dark' ? '#080a0e' : '#e6e6e6';
+  const tabActiveColor = colorScheme === 'dark' ? '#F8A728' : '#6200ee';
+  const tabInactive = colorScheme === 'dark' ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)';
+  // const tabActiveBackgroundColor = colorScheme === 'dark' ? '#080a0e' : '#e6e6e6';
 
   return (
     <BottomTab.Navigator
       initialRouteName='ReadQR'
       tabBarOptions={{
-        activeBackgroundColor: tabActiveBackgroundColor,
-        activeTintColor: tabLabelColor,
-        inactiveTintColor: tabLabelColor,
+        // activeBackgroundColor: tabActiveBackgroundColor,
+        activeTintColor: tabActiveColor,
+        inactiveTintColor: tabInactive,
         labelPosition: 'below-icon',
         style: { backgroundColor: tabBackgroundColor, height: 65 },
         labelStyle: {
@@ -38,10 +37,8 @@ export default function BottomTabNavigator() {
         name='ReadQR'
         component={ReadQRNavigator}
         options={{
-          tabBarLabel: ({ focused }) => {
-            return focused ? 'Read QR' : '';
-          },
-          tabBarIcon: () => <TabBarIcon name='qrcode-scan' color={tabIconColor} />,
+          tabBarLabel: 'Read QR',
+          tabBarIcon: ({ focused }) => <TabBarIcon name='qrcode-scan' color={focused ? tabActiveColor : tabInactive} />,
         }}
       />
       <BottomTab.Screen
@@ -49,7 +46,7 @@ export default function BottomTabNavigator() {
         component={ListQRNavigator}
         options={{
           tabBarLabel: 'List QR',
-          tabBarIcon: () => <TabBarIcon name='format-list-text' color={tabIconColor} />,
+          tabBarIcon: ({ focused }) => <TabBarIcon name='format-list-text' color={focused ? tabActiveColor : tabInactive} />,
         }}
       />
     </BottomTab.Navigator>
@@ -67,9 +64,12 @@ function TabBarIcon(props: { name: React.ComponentProps<typeof MaterialCommunity
 const ReadQRStack = createStackNavigator<ReadQRParamList>();
 
 function ReadQRNavigator() {
+  const colorScheme = useColorScheme();
+  const tabBackgroundColor = colorScheme === 'dark' ? '#0D1117' : '#FFFFFF';
+
   return (
     <ReadQRStack.Navigator>
-      <ReadQRStack.Screen name='ReadQRScreen' component={ReadQRScreen} options={{ headerTitle: 'Read QR code' }} />
+      <ReadQRStack.Screen name='ReadQRScreen' component={ReadQRScreen} options={{ headerTitle: 'Read QR code', headerStyle: { backgroundColor: tabBackgroundColor } }} />
     </ReadQRStack.Navigator>
   );
 }
@@ -77,9 +77,12 @@ function ReadQRNavigator() {
 const ListQRStack = createStackNavigator<ListQRParamList>();
 
 function ListQRNavigator() {
+  const colorScheme = useColorScheme();
+  const tabBackgroundColor = colorScheme === 'dark' ? '#0D1117' : '#FFFFFF';
+
   return (
     <ListQRStack.Navigator>
-      <ListQRStack.Screen name='ListQRScreen' component={ListQRScreen} options={{ headerTitle: 'List QR code' }} />
+      <ListQRStack.Screen name='ListQRScreen' component={ListQRScreen} options={{ headerTitle: 'List QR code', headerStyle: { backgroundColor: tabBackgroundColor } }} />
     </ListQRStack.Navigator>
   );
 }
