@@ -38,7 +38,9 @@ export default function BottomTabNavigator() {
         name='ReadQR'
         component={ReadQRNavigator}
         options={{
-          tabBarLabel: 'Read QR',
+          tabBarLabel: ({ focused }) => {
+            return focused ? 'Read QR' : '';
+          },
           tabBarIcon: () => <TabBarIcon name='qrcode-scan' color={tabIconColor} />,
         }}
       />
