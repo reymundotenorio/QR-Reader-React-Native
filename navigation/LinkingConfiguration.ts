@@ -6,14 +6,14 @@ export default {
     screens: {
       Root: {
         screens: {
-          TabOne: {
+          ReadQR: {
             screens: {
-              TabOneScreen: 'one',
+              ReadQRScreen: 'read-qr',
             },
           },
-          TabTwo: {
+          ListQR: {
             screens: {
-              TabTwoScreen: 'two',
+              ListQRScreen: 'list-qr',
             },
           },
         },

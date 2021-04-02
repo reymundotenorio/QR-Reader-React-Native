@@ -4,14 +4,14 @@ export type RootStackParamList = {
 };
 
 export type BottomTabParamList = {
-  TabOne: undefined;
-  TabTwo: undefined;
+  ReadQR: undefined;
+  ListQR: undefined;
 };
 
-export type TabOneParamList = {
-  TabOneScreen: undefined;
+export type ReadQRParamList = {
+  ReadQRScreen: undefined;
 };
 
-export type TabTwoParamList = {
-  TabTwoScreen: undefined;
+export type ListQRParamList = {
+  ListQRScreen: undefined;
 };
