@@ -3,19 +3,22 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
 
+import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import ReadQRScreen from '../screens/ReadQRScreen';
 import ListQRScreen from '../screens/ListQRScreen';
+
 import { BottomTabParamList, ReadQRParamList, ListQRParamList } from '../types';
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
 export default function BottomTabNavigator() {
   const colorScheme = useColorScheme();
-  const tabBackgroundColor = colorScheme === 'dark' ? '#0D1117' : '#FFFFFF';
-  const tabActiveColor = colorScheme === 'dark' ? '#F8A728' : '#6200ee';
-  const tabInactive = colorScheme === 'dark' ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)';
-  // const tabActiveBackgroundColor = colorScheme === 'dark' ? '#080a0e' : '#e6e6e6';
+
+  const tabBackgroundColor = Colors[colorScheme].tabBackgroundColor;
+  const tabActiveColor = Colors[colorScheme].tabActiveColor;
+  const tabInactive = Colors[colorScheme].tabInactive;
+  // const tabActiveBackgroundColor = Colors[colorScheme].tabActiveBackgroundColor;
 
   return (
     <BottomTab.Navigator
