@@ -15,24 +15,27 @@ export default function ListQRScreenInfo() {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={QRData}
-        keyExtractor={(item, index) => `key_${index}`}
-        renderItem={({ item, index }) => (
-          <TouchableOpacity style={styles.itemTouchable} onPress={() => alert('Yes')}>
-            {index != 0 && <View style={styles.separator} lightColor='rgba(0,0,0,0.3)' darkColor='rgba(255,255,255,0.3)' />}
+      {QRData.length === 0 && <MonoText style={styles.noData}>No data saved</MonoText>}
+      {QRData.length > 0 && (
+        <FlatList
+          data={QRData}
+          keyExtractor={(item, index) => `key_${index}`}
+          renderItem={({ item, index }) => (
+            <TouchableOpacity style={styles.itemTouchable} onPress={() => alert('Yes')}>
+              {index != 0 && <View style={styles.separator} lightColor='rgba(0,0,0,0.3)' darkColor='rgba(255,255,255,0.3)' />}
 
-            <View style={styles.itemInformation}>
-              <View></View>
-              <View>
-                <Text style={styles.itemType}>Contact</Text>
-                <MonoText>{item.decoded_info}</MonoText>
-                {/* <Text>{`Saved at ${Moment(item.decoded_datetime).format('DD MMM YYYY - H:mm:ss')}`}</Text> */}
+              <View style={styles.itemInformation}>
+                <View></View>
+                <View>
+                  <Text style={styles.itemType}>Contact</Text>
+                  <MonoText>{item.decoded_info}</MonoText>
+                  <Text>{`Saved at ${Moment(item.decoded_datetime).format('DD MMM YYYY - H:mm:ss')}`}</Text>
+                </View>
               </View>
-            </View>
-          </TouchableOpacity>
-        )}
-      />
+            </TouchableOpacity>
+          )}
+        />
+      )}
     </View>
   );
 }
@@ -44,9 +47,14 @@ export default function ListQRScreenInfo() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
+    // alignItems: 'flex-start',
+    // justifyContent: 'flex-start',
     backgroundColor: 'transparent',
+  },
+  noData: {
+    fontSize: 20,
+    textAlign: 'center',
+    marginVertical: 30
   },
   itemTouchable: {
     backgroundColor: 'transparent',

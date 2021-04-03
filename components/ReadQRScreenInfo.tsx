@@ -144,9 +144,9 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     marginBottom: '10%',
   },
-  permissions:{
+  permissions: {
     fontSize: 20,
     textAlign: 'center',
-    marginVertical: 30
-  }
+    marginVertical: 30,
+  },
 });

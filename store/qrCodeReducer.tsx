@@ -2,11 +2,7 @@ import { ADD_QR_DATA } from './qrCodeTypes';
 import { QRCodeAction } from '../types';
 
 const initialState = {
-  QRData: [
-    { decoded_info: 'HTML I', decoded_datetime: `${new Date()}` },
-    { decoded_info: 'CSS', decoded_datetime: `${new Date()}` },
-    { decoded_info: 'Responsive design', decoded_datetime: `${new Date()}` },
-  ],
+  QRData: [],
 };
 
 const qrCodeReducer = (state = initialState, action: QRCodeAction) => {
