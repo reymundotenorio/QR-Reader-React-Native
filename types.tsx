@@ -28,3 +28,14 @@ interface Navigation {
 export type NavigationProps = {
   navigation: Navigation;
 };
+
+export type decodeInfoListReducerProps = {
+  type: string;
+  payload: string;
+};
+
+export interface QRCodeAction {
+  type: string;
+  decoded_info: string;
+  decoded_type: string;
+}
