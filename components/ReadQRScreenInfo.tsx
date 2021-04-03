@@ -4,6 +4,9 @@ import { BarCodeScanner } from 'expo-barcode-scanner';
 import { Path, Svg, SvgProps } from 'react-native-svg';
 import Constants from 'expo-constants';
 
+import { useDispatch, useSelector } from 'react-redux';
+import { addQRData } from '../store/qrCodeAction';
+
 import { Text, View } from './Themed';
 import { MonoText } from './StyledText';
 
@@ -15,6 +18,7 @@ import { NavigationProps, handleBarCodeScannedProps } from '../types';
 export default function ReadQRScreenInfo({ navigation }: NavigationProps) {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [scanned, setScanned] = useState<boolean>(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     (async () => {
@@ -25,23 +29,55 @@ export default function ReadQRScreenInfo({ navigation }: NavigationProps) {
 
   const handleBarCodeScanned = ({ type, data }: handleBarCodeScannedProps) => {
     setScanned(true);
-    QRDetected(type, data, setScanned, navigation.navigate);
+    QRDetected(data);
     // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+  };
+
+  const saveQRData = (data: string) => {
+    dispatch(addQRData(data, `${new Date()}`));
+  };
+
+  const QRDetected = (data: string) => {
+    Alert.alert(
+      'QR Code detected',
+      `${data}`,
+      [
+        {
+          text: 'Read again',
+          onPress: () => setScanned(false),
+          style: 'cancel',
+        },
+        {
+          text: 'Save information',
+          onPress: () => {
+            saveQRData(data);
+            // Save in Redux and redirect to list
+
+            navigation.navigate('ListQR');
+
+            setTimeout(() => {
+              setScanned(false);
+            }, 1000);
+          },
+        },
+      ],
+      { cancelable: false }
+    );
   };
 
   if (hasPermission === null) {
     return (
-      <Text lightColor='rgba(0,0,0,0.8)' darkColor='rgba(255,255,255,0.8)'>
+      <MonoText style={styles.permissions} lightColor='rgba(0,0,0,0.8)' darkColor='rgba(255,255,255,0.8)'>
         Requesting for camera permission
-      </Text>
+      </MonoText>
     );
   }
 
   if (hasPermission === false) {
     return (
-      <Text lightColor='rgba(0,0,0,0.8)' darkColor='rgba(255,255,255,0.8)'>
+      <MonoText style={styles.permissions} lightColor='rgba(0,0,0,0.8)' darkColor='rgba(255,255,255,0.8)'>
         No access to camera
-      </Text>
+      </MonoText>
     );
   }
 
@@ -54,9 +90,9 @@ export default function ReadQRScreenInfo({ navigation }: NavigationProps) {
       }}
     >
       {hasPermission && (
-        <BarCodeScanner onBarCodeScanned={scanned ? undefined : handleBarCodeScanned} barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]} style={[StyleSheet.absoluteFillObject, stylesQRReader.container]}>
-          <MonoText style={stylesQRReader.title}>Scan your QR code</MonoText>
-          <QRFocusIcon style={stylesQRReader.qrFocusIcon} />
+        <BarCodeScanner onBarCodeScanned={scanned ? undefined : handleBarCodeScanned} barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]} style={[StyleSheet.absoluteFillObject, styles.container]}>
+          <MonoText style={styles.title}>Scan your QR code</MonoText>
+          <QRFocusIcon style={styles.qrFocusIcon} />
         </BarCodeScanner>
       )}
     </View>
@@ -74,42 +110,16 @@ function QRFocusIcon(props: SvgProps) {
   );
 }
 
-function QRDetected(type: string, data: string, setScanned: Function, navigate: Function) {
-  Alert.alert(
-    'QR Code detected',
-    `${data}`,
-    [
-      {
-        text: 'Read again',
-        onPress: () => setScanned(false),
-        style: 'cancel',
-      },
-      {
-        text: 'Save information',
-        onPress: () => {
-          navigate('ListQR');
-
-          setTimeout(() => {
-            setScanned(false);
-          }, 1000);
-
-          // Save in Redux and redirect to list
-        },
-      },
-    ],
-    { cancelable: false }
-  );
-}
-
-const stylesQRReader = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     alignItems: 'center',
     paddingTop: Constants.statusBarHeight,
     backgroundColor: 'transparent',
     padding: 0,
     borderWidth: 0,
+    minWidth: '100%',
   },
   title: {
     fontSize: width * 0.05,
@@ -134,4 +144,9 @@ const stylesQRReader = StyleSheet.create({
     color: '#FFFFFF',
     marginBottom: '10%',
   },
+  permissions:{
+    fontSize: 20,
+    textAlign: 'center',
+    marginVertical: 30
+  }
 });

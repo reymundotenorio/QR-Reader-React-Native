@@ -1,7 +1,7 @@
 import { ADD_QR_DATA } from './qrCodeTypes';
 
-export const add_qr_data = (decoded_info: string, decoded_type: string) => ({
+export const addQRData = (decoded_info: string, decoded_datetime: string) => ({
   type: ADD_QR_DATA,
   decoded_info: decoded_info,
-  decoded_type: decoded_type,
+  decoded_datetime: decoded_datetime,
 });
