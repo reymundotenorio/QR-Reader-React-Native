@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, TouchableOpacity, FlatList, TextInput, SafeAreaView, Clipboard, Alert } from 'react-native';
 import { useSelector } from 'react-redux';
 import Moment from 'moment';
-// import Clipboard from '@react-native-community/clipboard';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import Colors from '../constants/Colors';
+import useColorScheme from '../hooks/useColorScheme';
 import { MonoText } from './StyledText';
 import { Text, View } from './Themed';
 
@@ -17,6 +18,9 @@ export default function ListQRScreenInfo() {
   useEffect(() => {
     setdataFiltered(QRData);
   }, [QRData]);
+
+  const colorScheme = useColorScheme();
+  const tabActiveColor = Colors[colorScheme].tabActiveColor;
 
   const copyQRData = (text: string) => {
     Clipboard.setString(text);
@@ -65,10 +69,11 @@ export default function ListQRScreenInfo() {
                 {index != 0 && <View style={styles.separator} lightColor='rgba(0,0,0,0.3)' darkColor='rgba(255,255,255,0.3)' />}
 
                 <View style={styles.itemInformation}>
-                  <View></View>
+                  <QRIcon name='qrcode' color={tabActiveColor} />
+
                   <View style={styles.itemQRInfo}>
                     <Text style={styles.itemType}>Contact</Text>
-                    <MonoText>{item.decoded_info}</MonoText>
+                    <Text>{item.decoded_info}</Text>
                     <Text style={styles.itemDateTime}>{`Saved at ${Moment(new Date(item.decoded_datetime)).format('DD MMM YYYY - H:mm:ss')}`}</Text>
                   </View>
                 </View>
@@ -79,6 +84,10 @@ export default function ListQRScreenInfo() {
       )}
     </View>
   );
+}
+
+function QRIcon(props: { name: React.ComponentProps<typeof MaterialCommunityIcons>['name']; color: string }) {
+  return <MaterialCommunityIcons size={30} style={styles.itemQRIcon} {...props} />;
 }
 
 const styles = StyleSheet.create({
@@ -123,6 +132,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-start',
+    flexDirection: 'row',
+    flexWrap: 'nowrap',
 
     paddingTop: 15,
     paddingBottom: 15,
@@ -130,9 +141,13 @@ const styles = StyleSheet.create({
     paddingRight: 15,
     minWidth: '100%',
   },
+  itemQRIcon: {
+    paddingRight: 15,
+    paddingBottom: 20,
+    marginBottom: 0,
+  },
   itemQRInfo: {
     flex: 1,
-    width: '100%',
   },
   itemType: {
     fontWeight: 'bold',
