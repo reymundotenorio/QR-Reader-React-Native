@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: width * 0.05,
-    marginTop: '10%',
+    marginTop: 0,
     textAlign: 'center',
     width: 'auto',
     color: '#FFFFFF',
@@ -136,8 +136,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.3)',
   },
   qrFocusIcon: {
-    marginTop: '20%',
-    marginBottom: '20%',
+    marginTop: '5%',
+    marginBottom: '35%',
     width: qrSize,
     height: qrSize,
   },

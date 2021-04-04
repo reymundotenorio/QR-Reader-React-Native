@@ -40,7 +40,7 @@ export interface QRCodeAction {
   decoded_datetime: string;
 }
 
-type QRData = {
+export type QRData = {
   decoded_info: string;
   decoded_datetime: string;
 };

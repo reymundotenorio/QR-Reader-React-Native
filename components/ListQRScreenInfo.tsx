@@ -1,61 +1,85 @@
-import * as WebBrowser from 'expo-web-browser';
-import React from 'react';
-import { StyleSheet, TouchableOpacity, FlatList, TextInput, SafeAreaView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, TouchableOpacity, FlatList, TextInput, SafeAreaView, Clipboard, Alert } from 'react-native';
 import { useSelector } from 'react-redux';
 import Moment from 'moment';
+// import Clipboard from '@react-native-community/clipboard';
 
 import Colors from '../constants/Colors';
 import { MonoText } from './StyledText';
 import { Text, View } from './Themed';
 
-import { QRState } from '../types';
+import { QRState, QRData } from '../types';
 
 export default function ListQRScreenInfo() {
   const QRData = useSelector((state: QRState) => state.QRData);
+  const [dataFiltered, setdataFiltered] = useState<Array<QRData>>(QRData);
+
+  useEffect(() => {
+    setdataFiltered(QRData);
+  }, [QRData]);
+
+  const copyQRData = (text: string) => {
+    Clipboard.setString(text);
+
+    Alert.alert(
+      '',
+      'The QR code decoded has been copied to the clipboard',
+      [
+        {
+          text: 'OK',
+          onPress: () => {},
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
+  const searchData = (e: String) => {
+    const searchText = e.trim().toLowerCase();
+
+    let dataSearch = dataFiltered.filter((item) => {
+      return item.decoded_info.trim().toLowerCase().match(searchText);
+    });
+
+    if (!searchText || searchText === '') {
+      setdataFiltered(QRData);
+    } else if (Array.isArray(dataSearch)) {
+      setdataFiltered(dataSearch);
+    }
+  };
 
   return (
     <View style={styles.container}>
+      {QRData.length === 0 && <MonoText style={styles.noData}>No QR Data has been saved</MonoText>}
       {QRData.length > 0 && (
-        <SafeAreaView>
-          <TextInput
-            style={styles.inputSearch}
-            //  onChangeText={onChangeNumber}
-            //  value={number}
-            placeholder='Search QR Data'
-            keyboardType='default'
-          />
-          <View style={styles.inputSeparator} lightColor='rgba(0,0,0,0.3)' darkColor='rgba(255,255,255,0.3)' />
-        </SafeAreaView>
-      )}
+        <View>
+          <SafeAreaView>
+            <TextInput style={styles.inputSearch} onChangeText={searchData} placeholder='Search QR Data' keyboardType='default' />
+            <View style={styles.inputSeparator} lightColor='rgba(0,0,0,0.3)' darkColor='rgba(255,255,255,0.3)' />
+          </SafeAreaView>
+          <FlatList
+            data={dataFiltered.reverse()}
+            keyExtractor={(item, index) => `key_${index}`}
+            renderItem={({ item, index }) => (
+              <TouchableOpacity style={styles.itemTouchable} onPress={() => copyQRData(item.decoded_info)}>
+                {index != 0 && <View style={styles.separator} lightColor='rgba(0,0,0,0.3)' darkColor='rgba(255,255,255,0.3)' />}
 
-      {QRData.length === 0 && <MonoText style={styles.noData}>No data saved</MonoText>}
-      {QRData.length > 0 && (
-        <FlatList
-          data={QRData.reverse()}
-          keyExtractor={(item, index) => `key_${index}`}
-          renderItem={({ item, index }) => (
-            <TouchableOpacity style={styles.itemTouchable} onPress={() => alert('Yes')}>
-              {index != 0 && <View style={styles.separator} lightColor='rgba(0,0,0,0.3)' darkColor='rgba(255,255,255,0.3)' />}
-
-              <View style={styles.itemInformation}>
-                <View></View>
-                <View style={styles.itemQRInfo}>
-                  <Text style={styles.itemType}>Contact</Text>
-                  <MonoText>{item.decoded_info}</MonoText>
-                  <Text style={styles.itemDateTime}>{`Saved at ${Moment(new Date(item.decoded_datetime)).format('DD MMM YYYY - H:mm:ss')}`}</Text>
+                <View style={styles.itemInformation}>
+                  <View></View>
+                  <View style={styles.itemQRInfo}>
+                    <Text style={styles.itemType}>Contact</Text>
+                    <MonoText>{item.decoded_info}</MonoText>
+                    <Text style={styles.itemDateTime}>{`Saved at ${Moment(new Date(item.decoded_datetime)).format('DD MMM YYYY - H:mm:ss')}`}</Text>
+                  </View>
                 </View>
-              </View>
-            </TouchableOpacity>
-          )}
-        />
+              </TouchableOpacity>
+            )}
+          />
+        </View>
       )}
     </View>
   );
 }
-
-// function handleHelpPress() {
-//   WebBrowser.openBrowserAsync('https://docs.expo.io/get-started/create-a-new-app/#opening-the-app-on-your-phonetablet');
-// }
 
 const styles = StyleSheet.create({
   container: {
