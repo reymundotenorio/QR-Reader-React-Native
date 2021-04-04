@@ -1,7 +1,9 @@
+/* eslint-disable import/prefer-default-export */
 import { ADD_QR_DATA } from './qrCodeTypes';
 
-export const addQRData = (decoded_info: string, decoded_datetime: string) => ({
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export const addQRData = (decodedInfo: string, decodedDatetime: string) => ({
   type: ADD_QR_DATA,
-  decoded_info: decoded_info,
-  decoded_datetime: decoded_datetime,
+  decodedInfo,
+  decodedDatetime,
 });

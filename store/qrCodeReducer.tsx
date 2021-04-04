@@ -1,11 +1,11 @@
+import { AnyAction, Reducer } from 'redux';
 import { ADD_QR_DATA } from './qrCodeTypes';
-import { QRCodeAction } from '../types';
 
 const initialState = {
   QRData: [],
 };
 
-const qrCodeReducer = (state = initialState, action: QRCodeAction) => {
+const qrCodeReducer: Reducer = (state = initialState, action: AnyAction) => {
   switch (action.type) {
     case ADD_QR_DATA:
       return {
@@ -13,8 +13,8 @@ const qrCodeReducer = (state = initialState, action: QRCodeAction) => {
         QRData: [
           ...state.QRData,
           {
-            decoded_info: action.decoded_info,
-            decoded_datetime: action.decoded_datetime,
+            decodedInfo: action.decodedInfo,
+            decodedDatetime: action.decodedDatetime,
           },
         ],
       };

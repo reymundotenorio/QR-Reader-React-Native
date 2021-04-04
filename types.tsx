@@ -24,6 +24,7 @@ export type handleBarCodeScannedProps = {
 };
 
 interface Navigation {
+  // eslint-disable-next-line @typescript-eslint/ban-types
   navigate: Function;
 }
 
@@ -38,17 +39,17 @@ export type decodeInfoListReducerProps = {
 
 export interface QRCodeAction {
   type: string;
-  decoded_info: string;
-  decoded_datetime: string;
+  decodedInfo: string;
+  decodedDatetime: string;
 }
 
-export type QRData = {
-  decoded_info: string;
-  decoded_datetime: string;
+export type QRDataType = {
+  decodedInfo: string;
+  decodedDatetime: string;
 };
 
 export interface QRState {
-  QRData: Array<QRData>;
+  QRData: Array<QRDataType>;
 }
 
 export interface qrType {
