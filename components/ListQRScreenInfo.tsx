@@ -12,7 +12,7 @@ import { Text, View } from './Themed';
 import { QRState, QRData } from '../types';
 
 export default function ListQRScreenInfo() {
-  const QRData = useSelector((state: QRState) => state.QRData);
+  const QRData = useSelector((state: QRState) => state.QRData).reverse();
   const [dataFiltered, setdataFiltered] = useState<Array<QRData>>(QRData);
 
   useEffect(() => {
@@ -61,23 +61,26 @@ export default function ListQRScreenInfo() {
             <TextInput style={styles.inputSearch} onChangeText={searchData} placeholder='Search QR Data' keyboardType='default' />
             <View style={styles.inputSeparator} lightColor='rgba(0,0,0,0.3)' darkColor='rgba(255,255,255,0.3)' />
           </SafeAreaView>
+
           <FlatList
-            data={dataFiltered.reverse()}
+            data={dataFiltered}
             keyExtractor={(item, index) => `key_${index}`}
             renderItem={({ item, index }) => (
-              <TouchableOpacity style={styles.itemTouchable} onPress={() => copyQRData(item.decoded_info)}>
+              <View>
                 {index != 0 && <View style={styles.separator} lightColor='rgba(0,0,0,0.3)' darkColor='rgba(255,255,255,0.3)' />}
 
-                <View style={styles.itemInformation}>
-                  <QRIcon name='qrcode' color={tabActiveColor} />
+                <TouchableOpacity style={styles.itemTouchable} onPress={() => copyQRData(item.decoded_info)}>
+                  <View style={styles.itemInformation}>
+                    <QRIcon name='qrcode' color={tabActiveColor} />
 
-                  <View style={styles.itemQRInfo}>
-                    <Text style={styles.itemType}>Contact</Text>
-                    <Text>{item.decoded_info}</Text>
-                    <Text style={styles.itemDateTime}>{`Saved at ${Moment(new Date(item.decoded_datetime)).format('DD MMM YYYY - H:mm:ss')}`}</Text>
+                    <View style={styles.itemQRInfo}>
+                      <Text style={styles.itemType}>Contact</Text>
+                      <Text>{item.decoded_info}</Text>
+                      <Text style={styles.itemDateTime}>{`Saved at ${Moment(new Date(item.decoded_datetime)).format('DD MMM YYYY - H:mm:ss')}`}</Text>
+                    </View>
                   </View>
-                </View>
-              </TouchableOpacity>
+                </TouchableOpacity>
+              </View>
             )}
           />
         </View>
@@ -87,7 +90,7 @@ export default function ListQRScreenInfo() {
 }
 
 function QRIcon(props: { name: React.ComponentProps<typeof MaterialCommunityIcons>['name']; color: string }) {
-  return <MaterialCommunityIcons size={30} style={styles.itemQRIcon} {...props} />;
+  return <MaterialCommunityIcons size={35} style={styles.itemQRIcon} {...props} />;
 }
 
 const styles = StyleSheet.create({
@@ -95,14 +98,16 @@ const styles = StyleSheet.create({
     flex: 1,
     // alignItems: 'flex-start',
     // justifyContent: 'flex-start',
-    backgroundColor: 'transparent',
+    // backgroundColor: 'transparent',
+    height: '100%',
   },
   inputSearch: {
     height: 45,
     backgroundColor: '#FFFFFF',
-    marginTop: 30,
+    marginTop: 20,
     marginLeft: 15,
     marginRight: 15,
+    marginBottom: 20,
     paddingTop: 8,
     paddingBottom: 8,
     paddingLeft: 10,
@@ -110,13 +115,13 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   inputSeparator: {
-    height: 1,
+    height: 3,
     marginLeft: 'auto',
     marginRight: 'auto',
-    width: '90%',
-    marginTop: 5,
-    marginBottom: 20,
-    backgroundColor: 'transparent',
+    width: '100%',
+    marginTop: 0,
+    marginBottom: 10,
+    // backgroundColor: 'transparent',
   },
   noData: {
     fontSize: 20,
@@ -164,6 +169,6 @@ const styles = StyleSheet.create({
     height: 1,
     marginLeft: 'auto',
     marginRight: 'auto',
-    width: '90%',
+    width: '92%',
   },
 });
