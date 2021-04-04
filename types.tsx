@@ -1,3 +1,5 @@
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+
 export type RootStackParamList = {
   Root: undefined;
   NotFound: undefined;
@@ -47,4 +49,9 @@ export type QRData = {
 
 export interface QRState {
   QRData: Array<QRData>;
+}
+
+export interface qrType {
+  dataType: string;
+  icon: React.ComponentProps<typeof MaterialCommunityIcons>['name'];
 }

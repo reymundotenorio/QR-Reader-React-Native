@@ -38,7 +38,7 @@ export default function ReadQRScreenInfo({ navigation }: NavigationProps) {
   };
 
   const saveQRData = (data: string) => {
-    dispatch(addQRData(data, `${new Date()}`));
+    dispatch(addQRData(data.trim(), `${new Date()}`));
   };
 
   const QRDetected = (data: string) => {

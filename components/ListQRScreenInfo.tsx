@@ -9,10 +9,12 @@ import useColorScheme from '../hooks/useColorScheme';
 import { MonoText } from './StyledText';
 import { Text, View } from './Themed';
 
+import { checkQRType } from '../qr-type';
+
 import { QRState, QRData } from '../types';
 
 export default function ListQRScreenInfo() {
-  const QRData = useSelector((state: QRState) => state.QRData).reverse();
+  const QRData = useSelector((state: QRState) => state.QRData);
   const [dataFiltered, setdataFiltered] = useState<Array<QRData>>(QRData);
 
   useEffect(() => {
@@ -42,7 +44,7 @@ export default function ListQRScreenInfo() {
     const searchText = e.trim().toLowerCase();
 
     let dataSearch = dataFiltered.filter((item) => {
-      return item.decoded_info.trim().toLowerCase().match(searchText);
+      return item.decoded_info.toLowerCase().match(searchText);
     });
 
     if (!searchText || searchText === '') {
@@ -63,7 +65,7 @@ export default function ListQRScreenInfo() {
           </SafeAreaView>
 
           <FlatList
-            data={dataFiltered}
+            data={dataFiltered.sort((a, b) => new Date(b.decoded_datetime).getTime() - new Date(a.decoded_datetime).getTime())}
             keyExtractor={(item, index) => `key_${index}`}
             renderItem={({ item, index }) => (
               <View>
@@ -71,10 +73,10 @@ export default function ListQRScreenInfo() {
 
                 <TouchableOpacity style={styles.itemTouchable} onPress={() => copyQRData(item.decoded_info)}>
                   <View style={styles.itemInformation}>
-                    <QRIcon name='qrcode' color={tabActiveColor} />
+                    <QRIcon name={checkQRType(item.decoded_info).icon} color={tabActiveColor} />
 
                     <View style={styles.itemQRInfo}>
-                      <Text style={styles.itemType}>Contact</Text>
+                      <Text style={styles.itemType}>{checkQRType(item.decoded_info).dataType}</Text>
                       <Text>{item.decoded_info}</Text>
                       <Text style={styles.itemDateTime}>{`Saved at ${Moment(new Date(item.decoded_datetime)).format('DD MMM YYYY - H:mm:ss')}`}</Text>
                     </View>
