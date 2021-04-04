@@ -29,7 +29,13 @@ export default function BottomTabNavigator() {
         activeTintColor: tabActiveColor,
         inactiveTintColor: tabInactive,
         labelPosition: 'below-icon',
-        style: { backgroundColor: tabBackgroundColor, height: 65 },
+        style: {
+          backgroundColor: tabBackgroundColor,
+          height: 70,
+          borderTopWidth: 0,
+          elevation: 0,
+          shadowOpacity: 0,
+        },
         labelStyle: {
           fontSize: 12,
           paddingTop: 2,
@@ -79,7 +85,7 @@ function TabBarIcon(props: {
 }) {
   return (
     // eslint-disable-next-line react/jsx-props-no-spreading
-    <MaterialCommunityIcons size={30} style={{ marginBottom: -3 }} {...props} />
+    <MaterialCommunityIcons size={32} style={{ marginBottom: -3 }} {...props} />
   );
 }
 
@@ -89,7 +95,9 @@ const ReadQRStack = createStackNavigator<ReadQRParamList>();
 
 function ReadQRNavigator() {
   const colorScheme = useColorScheme();
-  const tabBackgroundColor = colorScheme === 'dark' ? '#0D1117' : '#FFFFFF';
+
+  const { tabBackgroundColor } = Colors[colorScheme];
+  const { tabActiveColor } = Colors[colorScheme];
 
   return (
     <ReadQRStack.Navigator>
@@ -97,8 +105,19 @@ function ReadQRNavigator() {
         name="ReadQRScreen"
         component={ReadQRScreen}
         options={{
-          headerTitle: 'Read QR code',
-          headerStyle: { backgroundColor: tabBackgroundColor },
+          headerTitle: 'Scan QR code',
+          headerTitleStyle: {
+            color: tabActiveColor,
+            fontSize: 25,
+            fontWeight: '600',
+          },
+          headerStyle: {
+            backgroundColor: tabBackgroundColor,
+            height: 90,
+            borderBottomWidth: 0,
+            elevation: 0,
+            shadowOpacity: 0,
+          },
         }}
       />
     </ReadQRStack.Navigator>
@@ -109,7 +128,9 @@ const ListQRStack = createStackNavigator<ListQRParamList>();
 
 function ListQRNavigator() {
   const colorScheme = useColorScheme();
-  const tabBackgroundColor = colorScheme === 'dark' ? '#0D1117' : '#FFFFFF';
+
+  const { tabBackgroundColor } = Colors[colorScheme];
+  const { tabActiveColor } = Colors[colorScheme];
 
   return (
     <ListQRStack.Navigator>
@@ -117,8 +138,19 @@ function ListQRNavigator() {
         name="ListQRScreen"
         component={ListQRScreen}
         options={{
-          headerTitle: 'List QR code',
-          headerStyle: { backgroundColor: tabBackgroundColor },
+          headerTitle: 'Scanning history',
+          headerTitleStyle: {
+            color: tabActiveColor,
+            fontSize: 25,
+            fontWeight: '600',
+          },
+          headerStyle: {
+            backgroundColor: tabBackgroundColor,
+            height: 90,
+            borderBottomWidth: 0,
+            elevation: 0,
+            shadowOpacity: 0,
+          },
         }}
       />
     </ListQRStack.Navigator>
