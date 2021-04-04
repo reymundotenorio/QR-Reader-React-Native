@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Button, Dimensions, Alert } from 'react-native';
+import { StyleSheet, Dimensions, Alert } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { Path, Svg, SvgProps } from 'react-native-svg';
 import Constants from 'expo-constants';
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { addQRData } from '../store/qrCodeAction';
 
-import { Text, View } from './Themed';
+import { View } from './Themed';
 import { MonoText } from './StyledText';
 
 const { width } = Dimensions.get('window');
@@ -21,10 +21,14 @@ export default function ReadQRScreenInfo({ navigation }: NavigationProps) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    (async () => {
-      const { status } = await BarCodeScanner.requestPermissionsAsync();
-      setHasPermission(status === 'granted');
-    })();
+    try {
+      (async () => {
+        const { status } = await BarCodeScanner.requestPermissionsAsync();
+        setHasPermission(status === 'granted');
+      })();
+    } catch (errr) {
+      console.error('Error getting Camera persission');
+    }
   }, []);
 
   const handleBarCodeScanned = ({ type, data }: handleBarCodeScannedProps) => {
@@ -34,7 +38,7 @@ export default function ReadQRScreenInfo({ navigation }: NavigationProps) {
   };
 
   const saveQRData = (data: string) => {
-    dispatch(addQRData(data, `${new Date()}`));
+    dispatch(addQRData(data.trim(), `${new Date()}`));
   };
 
   const QRDetected = (data: string) => {
@@ -123,7 +127,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: width * 0.05,
-    marginTop: '10%',
+    marginTop: 0,
     textAlign: 'center',
     width: 'auto',
     color: '#FFFFFF',
@@ -132,8 +136,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.3)',
   },
   qrFocusIcon: {
-    marginTop: '20%',
-    marginBottom: '20%',
+    marginTop: '5%',
+    marginBottom: '35%',
     width: qrSize,
     height: qrSize,
   },

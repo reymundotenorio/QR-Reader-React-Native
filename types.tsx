@@ -1,3 +1,5 @@
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+
 export type RootStackParamList = {
   Root: undefined;
   NotFound: undefined;
@@ -40,11 +42,16 @@ export interface QRCodeAction {
   decoded_datetime: string;
 }
 
-type QRData = {
+export type QRData = {
   decoded_info: string;
   decoded_datetime: string;
 };
 
 export interface QRState {
   QRData: Array<QRData>;
+}
+
+export interface qrType {
+  dataType: string;
+  icon: React.ComponentProps<typeof MaterialCommunityIcons>['name'];
 }

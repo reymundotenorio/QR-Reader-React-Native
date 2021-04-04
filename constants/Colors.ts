@@ -21,7 +21,7 @@ export default {
     tabIconSelected: tintColorDark,
 
     tabBackgroundColor: '#0D1117',
-    tabActiveColor: '#F8A728',
+    tabActiveColor: '#42a5f5',
     tabInactive: 'rgba(255,255,255,0.5)',
   },
 };

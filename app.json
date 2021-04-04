@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "qr-reader",
+    "name": "QR Reader",
     "slug": "qr-reader",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -29,6 +29,8 @@
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
-    }
+    },
+    "description": "",
+    "githubUrl": "https://github.com/reymundotenorio/QR-Reader-React-Native"
   }
 }
