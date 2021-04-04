@@ -1,5 +1,14 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, TouchableOpacity, FlatList, TextInput, SafeAreaView, Clipboard, Alert } from 'react-native';
+import {
+  StyleSheet,
+  TouchableOpacity,
+  FlatList,
+  TextInput,
+  SafeAreaView,
+  Clipboard,
+  Alert,
+} from 'react-native';
 import { useSelector } from 'react-redux';
 import Moment from 'moment';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -11,18 +20,18 @@ import { Text, View } from './Themed';
 
 import { checkQRType } from '../qr-type';
 
-import { QRState, QRData } from '../types';
+import { QRState, QRDataType } from '../types';
 
-export default function ListQRScreenInfo() {
+export default function ListQRScreenInfo(): JSX.Element {
   const QRData = useSelector((state: QRState) => state.QRData);
-  const [dataFiltered, setdataFiltered] = useState<Array<QRData>>(QRData);
+  const [dataFiltered, setdataFiltered] = useState<Array<QRDataType>>(QRData);
 
   useEffect(() => {
     setdataFiltered(QRData);
   }, [QRData]);
 
   const colorScheme = useColorScheme();
-  const tabActiveColor = Colors[colorScheme].tabActiveColor;
+  const { tabActiveColor } = Colors[colorScheme];
 
   const copyQRData = (text: string) => {
     Clipboard.setString(text);
@@ -33,18 +42,19 @@ export default function ListQRScreenInfo() {
       [
         {
           text: 'OK',
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
           onPress: () => {},
         },
       ],
-      { cancelable: true }
+      { cancelable: true },
     );
   };
 
-  const searchData = (e: String) => {
+  const searchData = (e: string) => {
     const searchText = e.trim().toLowerCase();
 
-    let dataSearch = dataFiltered.filter((item) => {
-      return item.decoded_info.toLowerCase().match(searchText);
+    const dataSearch = dataFiltered.filter(item => {
+      return item.decodedInfo.toLowerCase().match(searchText);
     });
 
     if (!searchText || searchText === '') {
@@ -56,29 +66,60 @@ export default function ListQRScreenInfo() {
 
   return (
     <View style={styles.container}>
-      {QRData.length === 0 && <MonoText style={styles.noData}>No QR Data has been saved</MonoText>}
+      {QRData.length === 0 && (
+        <MonoText style={styles.noData}>No QR Data has been saved</MonoText>
+      )}
       {QRData.length > 0 && (
         <View>
           <SafeAreaView>
-            <TextInput style={styles.inputSearch} onChangeText={searchData} placeholder='Search QR Data' keyboardType='default' />
-            <View style={styles.inputSeparator} lightColor='rgba(0,0,0,0.3)' darkColor='rgba(255,255,255,0.3)' />
+            <TextInput
+              style={styles.inputSearch}
+              onChangeText={searchData}
+              placeholder="Search QR Data"
+              keyboardType="default"
+            />
+            <View
+              style={styles.inputSeparator}
+              lightColor="rgba(0,0,0,0.3)"
+              darkColor="rgba(255,255,255,0.3)"
+            />
           </SafeAreaView>
 
           <FlatList
-            data={dataFiltered.sort((a, b) => new Date(b.decoded_datetime).getTime() - new Date(a.decoded_datetime).getTime())}
+            data={dataFiltered.sort(
+              (a, b) =>
+                new Date(b.decodedDatetime).getTime() -
+                new Date(a.decodedDatetime).getTime(),
+            )}
             keyExtractor={(item, index) => `key_${index}`}
             renderItem={({ item, index }) => (
               <View>
-                {index != 0 && <View style={styles.separator} lightColor='rgba(0,0,0,0.3)' darkColor='rgba(255,255,255,0.3)' />}
+                {index !== 0 && (
+                  <View
+                    style={styles.separator}
+                    lightColor="rgba(0,0,0,0.3)"
+                    darkColor="rgba(255,255,255,0.3)"
+                  />
+                )}
 
-                <TouchableOpacity style={styles.itemTouchable} onPress={() => copyQRData(item.decoded_info)}>
+                <TouchableOpacity
+                  style={styles.itemTouchable}
+                  onPress={() => copyQRData(item.decodedInfo)}
+                >
                   <View style={styles.itemInformation}>
-                    <QRIcon name={checkQRType(item.decoded_info).icon} color={tabActiveColor} />
+                    <QRIcon
+                      name={checkQRType(item.decodedInfo).icon}
+                      color={tabActiveColor}
+                    />
 
                     <View style={styles.itemQRInfo}>
-                      <Text style={styles.itemType}>{checkQRType(item.decoded_info).dataType}</Text>
-                      <Text>{item.decoded_info}</Text>
-                      <Text style={styles.itemDateTime}>{`Saved at ${Moment(new Date(item.decoded_datetime)).format('DD MMM YYYY - H:mm:ss')}`}</Text>
+                      <Text style={styles.itemType}>
+                        {checkQRType(item.decodedInfo).dataType}
+                      </Text>
+                      <Text>{item.decodedInfo}</Text>
+                      <Text style={styles.itemDateTime}>{`Saved at ${Moment(
+                        new Date(item.decodedDatetime),
+                      ).format('DD MMM YYYY - H:mm:ss')}`}</Text>
                     </View>
                   </View>
                 </TouchableOpacity>
@@ -91,8 +132,14 @@ export default function ListQRScreenInfo() {
   );
 }
 
-function QRIcon(props: { name: React.ComponentProps<typeof MaterialCommunityIcons>['name']; color: string }) {
-  return <MaterialCommunityIcons size={35} style={styles.itemQRIcon} {...props} />;
+function QRIcon(props: {
+  name: React.ComponentProps<typeof MaterialCommunityIcons>['name'];
+  color: string;
+}) {
+  return (
+    // eslint-disable-next-line react/jsx-props-no-spreading
+    <MaterialCommunityIcons size={35} style={styles.itemQRIcon} {...props} />
+  );
 }
 
 const styles = StyleSheet.create({
