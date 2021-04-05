@@ -1,4 +1,4 @@
-import { qrType } from '../types';
+import { QRType } from '../types';
 
 function isURL(str: string): boolean {
   const pattern = new RegExp(
@@ -33,7 +33,7 @@ function isGeo(str: string) {
 }
 
 // eslint-disable-next-line import/prefer-default-export
-export const checkQRType = (decodedData: string): qrType => {
+export const checkQRType = (decodedData: string): QRType => {
   if (isURL(decodedData)) {
     return { dataType: 'URL', icon: 'web' };
   }
