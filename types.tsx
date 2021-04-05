@@ -18,7 +18,7 @@ export type ListQRParamList = {
   ListQRScreen: undefined;
 };
 
-export type handleBarCodeScannedProps = {
+export type HandleBarCodeScanned = {
   type: string;
   data: string;
 };
@@ -30,11 +30,6 @@ interface Navigation {
 
 export type NavigationProps = {
   navigation: Navigation;
-};
-
-export type decodeInfoListReducerProps = {
-  type: string;
-  payload: string;
 };
 
 export interface QRCodeAction {
@@ -52,7 +47,24 @@ export interface QRState {
   QRData: Array<QRDataType>;
 }
 
-export interface qrType {
+export interface QRType {
   dataType: string;
   icon: React.ComponentProps<typeof MaterialCommunityIcons>['name'];
 }
+
+export type ColorScheme = {
+  text: string;
+  background: string;
+  tint: string;
+  tabIconDefault: string;
+  tabIconSelected: string;
+  tabBackgroundColor: string;
+  tabActiveColor: string;
+  tabInactive: string;
+  inputBackground: string;
+  inputPlaceholderColor: string;
+  inputText: string;
+  itemTouchableBackground: string;
+  itemTypeColor: string;
+  itemDataColor: string;
+};

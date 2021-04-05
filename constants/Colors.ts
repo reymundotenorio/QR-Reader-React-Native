@@ -16,6 +16,10 @@ export default {
     inputBackground: 'rgba(255,255,255,0.75)',
     inputPlaceholderColor: 'rgba(0,0,0,0.4)',
     inputText: 'rgba(0,0,0,0.9)',
+
+    itemTouchableBackground: '#FFFFFF',
+    itemTypeColor: '#000000',
+    itemDataColor: 'rgba(0,0,0,0.4)',
   },
   dark: {
     text: '#F8F8FA',
@@ -31,5 +35,9 @@ export default {
     inputBackground: 'rgba(255,255,255,0.1)',
     inputPlaceholderColor: 'rgba(255,255,255,0.3)',
     inputText: 'rgba(255,255,255,0.9)',
+
+    itemTouchableBackground: '#252836',
+    itemTypeColor: '#FFFFFF',
+    itemDataColor: 'rgba(255,255,255,0.3)',
   },
 };

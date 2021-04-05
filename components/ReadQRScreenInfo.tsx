@@ -8,10 +8,12 @@ import Constants from 'expo-constants';
 import { useDispatch } from 'react-redux';
 import { addQRData } from '../store/qrCodeAction';
 
+import Colors from '../constants/Colors';
+import useColorScheme from '../hooks/useColorScheme';
 import { View } from './Themed';
 import { MonoText } from './StyledText';
 
-import { NavigationProps, handleBarCodeScannedProps } from '../types';
+import { NavigationProps, HandleBarCodeScanned, ColorScheme } from '../types';
 
 const { width } = Dimensions.get('window');
 const qrSize = width * 0.7;
@@ -54,6 +56,8 @@ export default function ReadQRScreenInfo({
     animateLine();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const colorScheme = useColorScheme();
 
   const animateLine = () => {
     Animated.sequence([
@@ -102,7 +106,7 @@ export default function ReadQRScreenInfo({
     );
   };
 
-  const handleBarCodeScanned = ({ type, data }: handleBarCodeScannedProps) => {
+  const handleBarCodeScanned = ({ type, data }: HandleBarCodeScanned) => {
     setScanned(true);
     QRDetected(data);
     // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
@@ -112,9 +116,9 @@ export default function ReadQRScreenInfo({
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <MonoText
-          style={styles.permissions}
-          lightColor="rgba(0,0,0,0.8)"
-          darkColor="rgba(255,255,255,0.8)"
+          style={styles(Colors[colorScheme]).permissions}
+          lightColor="#000000"
+          darkColor="#FFFFFF"
         >
           Requesting for camera permission
         </MonoText>
@@ -126,9 +130,9 @@ export default function ReadQRScreenInfo({
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <MonoText
-          style={styles.permissions}
-          lightColor="rgba(0,0,0,0.8)"
-          darkColor="rgba(255,255,255,0.8)"
+          style={styles(Colors[colorScheme]).permissions}
+          lightColor="#000000"
+          darkColor="#FFFFFF"
         >
           No access to camera
         </MonoText>
@@ -148,17 +152,20 @@ export default function ReadQRScreenInfo({
         <BarCodeScanner
           onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
           barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
-          style={[StyleSheet.absoluteFillObject, styles.container]}
+          style={[
+            StyleSheet.absoluteFillObject,
+            styles(Colors[colorScheme]).container,
+          ]}
         >
           <View
             onLayout={e => setAnimationLineHeight(e.nativeEvent.layout.height)}
-            style={styles.focusedContainer}
+            style={styles(Colors[colorScheme]).focusedContainer}
           >
-            <QRFocusIcon style={styles.qrFocusIcon} />
+            <QRFocusIcon style={styles(Colors[colorScheme]).qrFocusIcon} />
 
             <Animated.View
               style={[
-                styles.animationLineStyle,
+                styles(Colors[colorScheme]).animationLineStyle,
                 {
                   transform: [
                     {
@@ -178,41 +185,46 @@ export default function ReadQRScreenInfo({
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: Constants.statusBarHeight,
-    backgroundColor: 'transparent',
-    padding: 0,
-    borderWidth: 0,
-  },
-
-  qrFocusIcon: {
-    marginTop: 0,
-    marginBottom: 0,
-    width: qrSize,
-    height: qrSize,
-  },
-  permissions: {
-    fontSize: 20,
-    textAlign: 'center',
-    marginVertical: 30,
-  },
-
-  focusedContainer: {
-    backgroundColor: 'transparent',
-    position: 'relative',
-    alignItems: 'center',
-  },
-  animationLineStyle: {
-    height: 20,
-    width: '55%',
-    backgroundColor: 'rgba(254,125,85,0.4)',
-    position: 'absolute',
-    borderRadius: 15,
-    marginLeft: 'auto',
-    marginRight: 'auto',
-  },
-});
+const styles = (colorScheme: ColorScheme) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingTop: Constants.statusBarHeight,
+      backgroundColor: 'transparent',
+      padding: 0,
+      borderWidth: 0,
+    },
+    qrFocusIcon: {
+      marginTop: 0,
+      marginBottom: 0,
+      width: qrSize,
+      height: qrSize,
+    },
+    permissions: {
+      fontSize: 20,
+      textAlign: 'center',
+      marginTop: 20,
+      marginBottom: 20,
+      marginLeft: 15,
+      marginRight: 15,
+      padding: 15,
+      borderRadius: 15,
+      backgroundColor: colorScheme.itemTouchableBackground,
+    },
+    focusedContainer: {
+      backgroundColor: 'transparent',
+      position: 'relative',
+      alignItems: 'center',
+    },
+    animationLineStyle: {
+      height: 20,
+      width: '55%',
+      backgroundColor: 'rgba(254,125,85,0.4)',
+      position: 'absolute',
+      borderRadius: 15,
+      marginLeft: 'auto',
+      marginRight: 'auto',
+    },
+  });

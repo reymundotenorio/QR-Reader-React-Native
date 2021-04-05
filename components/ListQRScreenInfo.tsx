@@ -20,7 +20,7 @@ import { Text, View } from './Themed';
 
 import { checkQRType } from '../qr-type';
 
-import { QRState, QRDataType } from '../types';
+import { QRState, QRDataType, ColorScheme } from '../types';
 
 export default function ListQRScreenInfo(): JSX.Element {
   const QRData = useSelector((state: QRState) => state.QRData);
@@ -64,13 +64,22 @@ export default function ListQRScreenInfo(): JSX.Element {
     }
   };
 
+  if (QRData.length === 0) {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <MonoText
+          style={styles(Colors[colorScheme]).noData}
+          lightColor="#000000"
+          darkColor="#FFFFFF"
+        >
+          No QR data has been saved
+        </MonoText>
+      </View>
+    );
+  }
+
   return (
     <View style={styles(Colors[colorScheme]).container}>
-      {QRData.length === 0 && (
-        <MonoText style={styles(Colors[colorScheme]).noData}>
-          No QR Data has been saved
-        </MonoText>
-      )}
       {QRData.length > 0 && (
         <View>
           <SafeAreaView style={styles(Colors[colorScheme]).inputSafeArea}>
@@ -84,7 +93,26 @@ export default function ListQRScreenInfo(): JSX.Element {
             <SearchIcon name="search" color={tabActiveColor} />
           </SafeAreaView>
 
+          {dataFiltered.length === 0 && (
+            <View
+              style={{
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <MonoText
+                style={styles(Colors[colorScheme]).noDataFound}
+                lightColor="#000000"
+                darkColor="#FFFFFF"
+              >
+                No QR data found with the search criteria
+              </MonoText>
+            </View>
+          )}
+
           <FlatList
+            style={styles(Colors[colorScheme]).list}
             data={dataFiltered.sort(
               (a, b) =>
                 new Date(b.decodedDatetime).getTime() -
@@ -93,16 +121,9 @@ export default function ListQRScreenInfo(): JSX.Element {
             keyExtractor={(item, index) => `key_${index}`}
             renderItem={({ item, index }) => (
               <View>
-                {index !== 0 && (
-                  <View
-                    style={styles(Colors[colorScheme]).separator}
-                    lightColor="rgba(0,0,0,0.3)"
-                    darkColor="rgba(255,255,255,0.3)"
-                  />
-                )}
-
                 <TouchableOpacity
                   style={styles(Colors[colorScheme]).itemTouchable}
+                  activeOpacity={0.7}
                   onPress={() => copyQRData(item.decodedInfo)}
                 >
                   <View style={styles(Colors[colorScheme]).itemInformation}>
@@ -115,12 +136,14 @@ export default function ListQRScreenInfo(): JSX.Element {
                       <Text style={styles(Colors[colorScheme]).itemType}>
                         {checkQRType(item.decodedInfo).dataType}
                       </Text>
-                      <Text>{item.decodedInfo}</Text>
+                      <Text style={styles(Colors[colorScheme]).itemData}>
+                        {item.decodedInfo}
+                      </Text>
                       <Text
                         style={styles(Colors[colorScheme]).itemDateTime}
-                      >{`Saved at ${Moment(
-                        new Date(item.decodedDatetime),
-                      ).format('DD MMM YYYY - H:mm:ss')}`}</Text>
+                      >{`${Moment(new Date(item.decodedDatetime)).format(
+                        'DD MMM YYYY - H:mm',
+                      )}`}</Text>
                     </View>
                   </View>
                 </TouchableOpacity>
@@ -165,13 +188,10 @@ function SearchIcon(props: {
   );
 }
 
-const styles = colorScheme =>
+const styles = (colorScheme: ColorScheme) =>
   StyleSheet.create({
     container: {
       flex: 1,
-      // alignItems: 'flex-start',
-      // justifyContent: 'flex-start',
-      // backgroundColor: 'transparent',
       height: '100%',
     },
     inputSearch: {
@@ -192,59 +212,85 @@ const styles = colorScheme =>
       marginLeft: 15,
       marginRight: 15,
       marginTop: 30,
-      marginBottom: 50,
+      marginBottom: 30,
     },
     inputSearchIcon: {
       position: 'absolute',
       right: 15,
       top: 5,
     },
+    noDataFound: {
+      fontSize: 18,
+      textAlign: 'center',
+      marginTop: 88,
+      marginLeft: 15,
+      marginRight: 15,
+      padding: 15,
+      borderRadius: 15,
+      backgroundColor: colorScheme.itemTouchableBackground,
+    },
     noData: {
       fontSize: 20,
       textAlign: 'center',
-      marginVertical: 30,
+      marginTop: 20,
+      marginBottom: 20,
+      marginLeft: 15,
+      marginRight: 15,
+      padding: 15,
+      borderRadius: 15,
+      backgroundColor: colorScheme.itemTouchableBackground,
+    },
+    list: {
+      paddingLeft: 15,
+      paddingRight: 15,
     },
     itemTouchable: {
-      backgroundColor: 'transparent',
+      backgroundColor: colorScheme.itemTouchableBackground,
       width: '100%',
+      borderRadius: 15,
+      padding: 5,
+      marginBottom: 15,
     },
     itemInformation: {
       backgroundColor: 'transparent',
       flex: 1,
-      alignItems: 'center',
+      alignItems: 'flex-start',
       justifyContent: 'flex-start',
       flexDirection: 'row',
       flexWrap: 'nowrap',
 
-      paddingTop: 15,
-      paddingBottom: 15,
+      paddingTop: 10,
+      paddingBottom: 2,
       paddingLeft: 15,
       paddingRight: 15,
       minWidth: '100%',
     },
     itemQRIcon: {
-      paddingRight: 15,
-      paddingBottom: 20,
-      marginBottom: 0,
+      padding: 5,
+      marginTop: 5,
+      marginRight: 15,
+      backgroundColor: colorScheme.background,
+      borderRadius: 7,
     },
     itemQRInfo: {
       flex: 1,
+      backgroundColor: 'transparent',
     },
     itemType: {
-      fontWeight: 'bold',
       fontSize: 16,
-      paddingBottom: 8,
+      fontFamily: 'poppins-semibold',
+      color: colorScheme.itemTypeColor,
+      paddingBottom: 2,
+    },
+    itemData: {
+      color: colorScheme.itemDataColor,
+      fontFamily: 'poppins-regular',
     },
     itemDateTime: {
+      color: colorScheme.itemDataColor,
       textAlign: 'right',
-      fontStyle: 'italic',
-      fontSize: 12,
-      paddingTop: 8,
-    },
-    separator: {
-      height: 1,
-      marginLeft: 'auto',
-      marginRight: 'auto',
-      width: '92%',
+      fontSize: 10,
+      fontFamily: 'poppins-regular',
+      paddingTop: 5,
     },
   });
