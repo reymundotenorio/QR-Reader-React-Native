@@ -59,12 +59,12 @@ export default function ReadQRScreenInfo({
     Animated.sequence([
       Animated.timing(focusLineAnimation, {
         toValue: 1,
-        duration: 1000,
+        duration: 1200,
         useNativeDriver: true,
       }),
       Animated.timing(focusLineAnimation, {
         toValue: 0,
-        duration: 1000,
+        duration: 1200,
         useNativeDriver: true,
       }),
     ]).start(animateLine);

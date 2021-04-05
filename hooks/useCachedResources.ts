@@ -18,6 +18,10 @@ export default function useCachedResources() {
           ...Ionicons.font,
           // eslint-disable-next-line global-require
           'space-mono': require('../assets/fonts/SpaceMono-Regular.ttf'),
+          // eslint-disable-next-line global-require
+          'poppins-regular': require('../assets/fonts/Poppins-Regular.ttf'),
+          // eslint-disable-next-line global-require
+          'poppins-semibold': require('../assets/fonts/Poppins-SemiBold.ttf'),
         });
       } catch (e) {
         // We might want to provide this error information to an error reporting service

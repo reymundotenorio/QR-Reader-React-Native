@@ -38,6 +38,7 @@ export default function BottomTabNavigator() {
         },
         labelStyle: {
           fontSize: 12,
+          fontFamily: 'poppins-regular',
           paddingTop: 2,
           paddingBottom: 5,
         },
@@ -109,11 +110,12 @@ function ReadQRNavigator() {
           headerTitleStyle: {
             color: tabActiveColor,
             fontSize: 25,
-            fontWeight: '600',
+            fontFamily: 'poppins-semibold',
+            paddingTop: 8,
           },
           headerStyle: {
             backgroundColor: tabBackgroundColor,
-            height: 90,
+            height: 100,
             borderBottomWidth: 0,
             elevation: 0,
             shadowOpacity: 0,
@@ -142,11 +144,12 @@ function ListQRNavigator() {
           headerTitleStyle: {
             color: tabActiveColor,
             fontSize: 25,
-            fontWeight: '600',
+            fontFamily: 'poppins-semibold',
+            paddingTop: 8,
           },
           headerStyle: {
             backgroundColor: tabBackgroundColor,
-            height: 90,
+            height: 100,
             borderBottomWidth: 0,
             elevation: 0,
             shadowOpacity: 0,
