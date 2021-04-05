@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Dimensions, Alert } from 'react-native';
+import { StyleSheet, Dimensions, Alert, Animated } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { Path, Svg, SvgProps } from 'react-native-svg';
 import Constants from 'expo-constants';
@@ -33,6 +33,11 @@ export default function ReadQRScreenInfo({
 }: NavigationProps): JSX.Element {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [scanned, setScanned] = useState<boolean>(false);
+  const [animationLineHeight, setAnimationLineHeight] = useState(0);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [focusLineAnimation, setFocusLineAnimation] = useState(
+    new Animated.Value(0),
+  );
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -42,9 +47,28 @@ export default function ReadQRScreenInfo({
         setHasPermission(status === 'granted');
       })();
     } catch (errr) {
-      // console.error('Error getting Camera persission');
+      // eslint-disable-next-line no-console
+      console.error('Error getting Camera persission');
     }
+
+    animateLine();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const animateLine = () => {
+    Animated.sequence([
+      Animated.timing(focusLineAnimation, {
+        toValue: 1,
+        duration: 1000,
+        useNativeDriver: true,
+      }),
+      Animated.timing(focusLineAnimation, {
+        toValue: 0,
+        duration: 1000,
+        useNativeDriver: true,
+      }),
+    ]).start(animateLine);
+  };
 
   const saveQRData = (data: string) => {
     dispatch(addQRData(data.trim(), `${new Date()}`));
@@ -86,25 +110,29 @@ export default function ReadQRScreenInfo({
 
   if (hasPermission === null) {
     return (
-      <MonoText
-        style={styles.permissions}
-        lightColor="rgba(0,0,0,0.8)"
-        darkColor="rgba(255,255,255,0.8)"
-      >
-        Requesting for camera permission
-      </MonoText>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <MonoText
+          style={styles.permissions}
+          lightColor="rgba(0,0,0,0.8)"
+          darkColor="rgba(255,255,255,0.8)"
+        >
+          Requesting for camera permission
+        </MonoText>
+      </View>
     );
   }
 
   if (hasPermission === false) {
     return (
-      <MonoText
-        style={styles.permissions}
-        lightColor="rgba(0,0,0,0.8)"
-        darkColor="rgba(255,255,255,0.8)"
-      >
-        No access to camera
-      </MonoText>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <MonoText
+          style={styles.permissions}
+          lightColor="rgba(0,0,0,0.8)"
+          darkColor="rgba(255,255,255,0.8)"
+        >
+          No access to camera
+        </MonoText>
+      </View>
     );
   }
 
@@ -122,7 +150,28 @@ export default function ReadQRScreenInfo({
           barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
           style={[StyleSheet.absoluteFillObject, styles.container]}
         >
-          <QRFocusIcon style={styles.qrFocusIcon} />
+          <View
+            onLayout={e => setAnimationLineHeight(e.nativeEvent.layout.height)}
+            style={styles.focusedContainer}
+          >
+            <QRFocusIcon style={styles.qrFocusIcon} />
+
+            <Animated.View
+              style={[
+                styles.animationLineStyle,
+                {
+                  transform: [
+                    {
+                      translateY: focusLineAnimation.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [20, animationLineHeight - 40],
+                      }),
+                    },
+                  ],
+                },
+              ]}
+            />
+          </View>
         </BarCodeScanner>
       )}
     </View>
@@ -132,40 +181,38 @@ export default function ReadQRScreenInfo({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-around',
+    justifyContent: 'center',
     alignItems: 'center',
     paddingTop: Constants.statusBarHeight,
     backgroundColor: 'transparent',
     padding: 0,
     borderWidth: 0,
-    minWidth: '100%',
   },
-  title: {
-    fontSize: width * 0.05,
-    marginTop: 0,
-    textAlign: 'center',
-    width: 'auto',
-    color: '#FFFFFF',
-    padding: 10,
-    borderRadius: 10,
-    backgroundColor: 'rgba(0,0,0,0.3)',
-  },
+
   qrFocusIcon: {
-    marginTop: '10%',
-    marginBottom: '10%',
+    marginTop: 0,
+    marginBottom: 0,
     width: qrSize,
     height: qrSize,
-  },
-  flashButton: {
-    fontSize: width * 0.05,
-    textAlign: 'center',
-    width: 'auto',
-    color: '#FFFFFF',
-    marginBottom: '10%',
   },
   permissions: {
     fontSize: 20,
     textAlign: 'center',
     marginVertical: 30,
+  },
+
+  focusedContainer: {
+    backgroundColor: 'transparent',
+    position: 'relative',
+    alignItems: 'center',
+  },
+  animationLineStyle: {
+    height: 20,
+    width: '55%',
+    backgroundColor: 'rgba(254,125,85,0.4)',
+    position: 'absolute',
+    borderRadius: 15,
+    marginLeft: 'auto',
+    marginRight: 'auto',
   },
 });
