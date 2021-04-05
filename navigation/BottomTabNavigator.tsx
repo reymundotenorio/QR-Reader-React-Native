@@ -1,35 +1,77 @@
-import { Ionicons } from '@expo/vector-icons';
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
-import TabOneScreen from '../screens/TabOneScreen';
-import TabTwoScreen from '../screens/TabTwoScreen';
-import { BottomTabParamList, TabOneParamList, TabTwoParamList } from '../types';
+import ReadQRScreen from '../screens/ReadQRScreen';
+import ListQRScreen from '../screens/ListQRScreen';
+
+import { BottomTabParamList, ReadQRParamList, ListQRParamList } from '../types';
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
 export default function BottomTabNavigator() {
   const colorScheme = useColorScheme();
 
+  const { tabBackgroundColor } = Colors[colorScheme];
+  const { tabActiveColor } = Colors[colorScheme];
+  const { tabInactive } = Colors[colorScheme];
+  // const tabActiveBackgroundColor = Colors[colorScheme].tabActiveBackgroundColor;
+
   return (
     <BottomTab.Navigator
-      initialRouteName="TabOne"
-      tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}>
+      initialRouteName="ReadQR"
+      tabBarOptions={{
+        // activeBackgroundColor: tabActiveBackgroundColor,
+        activeTintColor: tabActiveColor,
+        inactiveTintColor: tabInactive,
+        labelPosition: 'below-icon',
+        style: {
+          backgroundColor: tabBackgroundColor,
+          height: 70,
+          borderTopWidth: 0,
+          elevation: 0,
+          shadowOpacity: 0,
+        },
+        labelStyle: {
+          fontSize: 12,
+          fontFamily: 'poppins-regular',
+          paddingTop: 2,
+          paddingBottom: 5,
+        },
+      }}
+    >
       <BottomTab.Screen
-        name="TabOne"
-        component={TabOneNavigator}
+        name="ReadQR"
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
+        component={ReadQRNavigator}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,
+          tabBarLabel: 'Read QR',
+          tabBarIcon: ({ focused }) => (
+            // eslint-disable-next-line @typescript-eslint/no-use-before-define
+            <TabBarIcon
+              name="qrcode-scan"
+              color={focused ? tabActiveColor : tabInactive}
+            />
+          ),
         }}
       />
       <BottomTab.Screen
-        name="TabTwo"
-        component={TabTwoNavigator}
+        name="ListQR"
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
+        component={ListQRNavigator}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,
+          tabBarLabel: 'List QR',
+          tabBarIcon: ({ focused }) => (
+            // eslint-disable-next-line @typescript-eslint/no-use-before-define
+            <TabBarIcon
+              name="format-list-text"
+              color={focused ? tabActiveColor : tabInactive}
+            />
+          ),
         }}
       />
     </BottomTab.Navigator>
@@ -38,36 +80,82 @@ export default function BottomTabNavigator() {
 
 // You can explore the built-in icon families and icons on the web at:
 // https://icons.expo.fyi/
-function TabBarIcon(props: { name: React.ComponentProps<typeof Ionicons>['name']; color: string }) {
-  return <Ionicons size={30} style={{ marginBottom: -3 }} {...props} />;
+function TabBarIcon(props: {
+  name: React.ComponentProps<typeof MaterialCommunityIcons>['name'];
+  color: string;
+}) {
+  return (
+    // eslint-disable-next-line react/jsx-props-no-spreading
+    <MaterialCommunityIcons size={32} style={{ marginBottom: -3 }} {...props} />
+  );
 }
 
 // Each tab has its own navigation stack, you can read more about this pattern here:
 // https://reactnavigation.org/docs/tab-based-navigation#a-stack-navigator-for-each-tab
-const TabOneStack = createStackNavigator<TabOneParamList>();
+const ReadQRStack = createStackNavigator<ReadQRParamList>();
 
-function TabOneNavigator() {
+function ReadQRNavigator() {
+  const colorScheme = useColorScheme();
+
+  const { tabBackgroundColor } = Colors[colorScheme];
+  const { tabActiveColor } = Colors[colorScheme];
+
   return (
-    <TabOneStack.Navigator>
-      <TabOneStack.Screen
-        name="TabOneScreen"
-        component={TabOneScreen}
-        options={{ headerTitle: 'Tab One Title' }}
+    <ReadQRStack.Navigator>
+      <ReadQRStack.Screen
+        name="ReadQRScreen"
+        component={ReadQRScreen}
+        options={{
+          headerTitle: 'Scan QR code',
+          headerTitleStyle: {
+            color: tabActiveColor,
+            fontSize: 25,
+            fontFamily: 'poppins-semibold',
+            paddingTop: 8,
+          },
+          headerStyle: {
+            backgroundColor: tabBackgroundColor,
+            height: 100,
+            borderBottomWidth: 0,
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+        }}
       />
-    </TabOneStack.Navigator>
+    </ReadQRStack.Navigator>
   );
 }
 
-const TabTwoStack = createStackNavigator<TabTwoParamList>();
+const ListQRStack = createStackNavigator<ListQRParamList>();
 
-function TabTwoNavigator() {
+function ListQRNavigator() {
+  const colorScheme = useColorScheme();
+
+  const { tabBackgroundColor } = Colors[colorScheme];
+  const { tabActiveColor } = Colors[colorScheme];
+
   return (
-    <TabTwoStack.Navigator>
-      <TabTwoStack.Screen
-        name="TabTwoScreen"
-        component={TabTwoScreen}
-        options={{ headerTitle: 'Tab Two Title' }}
+    <ListQRStack.Navigator>
+      <ListQRStack.Screen
+        name="ListQRScreen"
+        component={ListQRScreen}
+        options={{
+          headerTitle: 'Scanning history',
+          headerTitleStyle: {
+            color: tabActiveColor,
+            fontSize: 25,
+            fontFamily: 'poppins-semibold',
+            paddingTop: 8,
+          },
+          headerStyle: {
+            backgroundColor: tabBackgroundColor,
+            height: 100,
+            borderBottomWidth: 0,
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+        }}
       />
-    </TabTwoStack.Navigator>
+    </ListQRStack.Navigator>
   );
 }
