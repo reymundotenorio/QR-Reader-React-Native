@@ -53,7 +53,7 @@ export default function ListQRScreenInfo(): JSX.Element {
   const searchData = (e: string) => {
     const searchText = e.trim().toLowerCase();
 
-    const dataSearch = dataFiltered.filter(item => {
+    const dataSearch = QRData.filter(item => {
       return item.decodedInfo.toLowerCase().match(searchText);
     });
 
