@@ -10,27 +10,25 @@
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#FE7D55"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
+        "backgroundColor": "#FE7D55"
       }
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
     },
-    "description": "",
+    "description": "Scan QR code and display the decoded data",
     "githubUrl": "https://github.com/reymundotenorio/QR-Reader-React-Native"
   }
 }

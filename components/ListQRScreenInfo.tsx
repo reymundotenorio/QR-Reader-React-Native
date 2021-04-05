@@ -18,7 +18,7 @@ import useColorScheme from '../hooks/useColorScheme';
 import { MonoText } from './StyledText';
 import { Text, View } from './Themed';
 
-import { checkQRType } from '../qr-type';
+import { checkQRType } from '../qr-types';
 
 import { QRState, QRDataType, ColorScheme } from '../types';
 
