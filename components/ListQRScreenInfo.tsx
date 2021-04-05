@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import Moment from 'moment';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
@@ -31,7 +31,7 @@ export default function ListQRScreenInfo(): JSX.Element {
   }, [QRData]);
 
   const colorScheme = useColorScheme();
-  const { tabActiveColor } = Colors[colorScheme];
+  const { tabActiveColor, inputPlaceholderColor } = Colors[colorScheme];
 
   const copyQRData = (text: string) => {
     Clipboard.setString(text);
@@ -65,24 +65,23 @@ export default function ListQRScreenInfo(): JSX.Element {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles(Colors[colorScheme]).container}>
       {QRData.length === 0 && (
-        <MonoText style={styles.noData}>No QR Data has been saved</MonoText>
+        <MonoText style={styles(Colors[colorScheme]).noData}>
+          No QR Data has been saved
+        </MonoText>
       )}
       {QRData.length > 0 && (
         <View>
-          <SafeAreaView>
+          <SafeAreaView style={styles(Colors[colorScheme]).inputSafeArea}>
             <TextInput
-              style={styles.inputSearch}
+              style={styles(Colors[colorScheme]).inputSearch}
+              placeholderTextColor={inputPlaceholderColor}
               onChangeText={searchData}
               placeholder="Search QR Data"
               keyboardType="default"
             />
-            <View
-              style={styles.inputSeparator}
-              lightColor="rgba(0,0,0,0.3)"
-              darkColor="rgba(255,255,255,0.3)"
-            />
+            <SearchIcon name="search" color={tabActiveColor} />
           </SafeAreaView>
 
           <FlatList
@@ -96,28 +95,30 @@ export default function ListQRScreenInfo(): JSX.Element {
               <View>
                 {index !== 0 && (
                   <View
-                    style={styles.separator}
+                    style={styles(Colors[colorScheme]).separator}
                     lightColor="rgba(0,0,0,0.3)"
                     darkColor="rgba(255,255,255,0.3)"
                   />
                 )}
 
                 <TouchableOpacity
-                  style={styles.itemTouchable}
+                  style={styles(Colors[colorScheme]).itemTouchable}
                   onPress={() => copyQRData(item.decodedInfo)}
                 >
-                  <View style={styles.itemInformation}>
+                  <View style={styles(Colors[colorScheme]).itemInformation}>
                     <QRIcon
                       name={checkQRType(item.decodedInfo).icon}
                       color={tabActiveColor}
                     />
 
-                    <View style={styles.itemQRInfo}>
-                      <Text style={styles.itemType}>
+                    <View style={styles(Colors[colorScheme]).itemQRInfo}>
+                      <Text style={styles(Colors[colorScheme]).itemType}>
                         {checkQRType(item.decodedInfo).dataType}
                       </Text>
                       <Text>{item.decodedInfo}</Text>
-                      <Text style={styles.itemDateTime}>{`Saved at ${Moment(
+                      <Text
+                        style={styles(Colors[colorScheme]).itemDateTime}
+                      >{`Saved at ${Moment(
                         new Date(item.decodedDatetime),
                       ).format('DD MMM YYYY - H:mm:ss')}`}</Text>
                     </View>
@@ -136,88 +137,114 @@ function QRIcon(props: {
   name: React.ComponentProps<typeof MaterialCommunityIcons>['name'];
   color: string;
 }) {
+  const colorScheme = useColorScheme();
+
   return (
-    // eslint-disable-next-line react/jsx-props-no-spreading
-    <MaterialCommunityIcons size={35} style={styles.itemQRIcon} {...props} />
+    <MaterialCommunityIcons
+      size={35}
+      style={styles(Colors[colorScheme]).itemQRIcon}
+      // eslint-disable-next-line react/jsx-props-no-spreading
+      {...props}
+    />
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    // alignItems: 'flex-start',
-    // justifyContent: 'flex-start',
-    // backgroundColor: 'transparent',
-    height: '100%',
-  },
-  inputSearch: {
-    height: 45,
-    backgroundColor: '#FFFFFF',
-    marginTop: 20,
-    marginLeft: 15,
-    marginRight: 15,
-    marginBottom: 20,
-    paddingTop: 8,
-    paddingBottom: 8,
-    paddingLeft: 10,
-    paddingRight: 10,
-    borderRadius: 10,
-  },
-  inputSeparator: {
-    height: 3,
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    width: '100%',
-    marginTop: 0,
-    marginBottom: 10,
-    // backgroundColor: 'transparent',
-  },
-  noData: {
-    fontSize: 20,
-    textAlign: 'center',
-    marginVertical: 30,
-  },
-  itemTouchable: {
-    backgroundColor: 'transparent',
-    width: '100%',
-  },
-  itemInformation: {
-    backgroundColor: 'transparent',
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    flexDirection: 'row',
-    flexWrap: 'nowrap',
+function SearchIcon(props: {
+  name: React.ComponentProps<typeof MaterialIcons>['name'];
+  color: string;
+}) {
+  const colorScheme = useColorScheme();
 
-    paddingTop: 15,
-    paddingBottom: 15,
-    paddingLeft: 15,
-    paddingRight: 15,
-    minWidth: '100%',
-  },
-  itemQRIcon: {
-    paddingRight: 15,
-    paddingBottom: 20,
-    marginBottom: 0,
-  },
-  itemQRInfo: {
-    flex: 1,
-  },
-  itemType: {
-    fontWeight: 'bold',
-    fontSize: 16,
-    paddingBottom: 8,
-  },
-  itemDateTime: {
-    textAlign: 'right',
-    fontStyle: 'italic',
-    fontSize: 12,
-    paddingTop: 8,
-  },
-  separator: {
-    height: 1,
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    width: '92%',
-  },
-});
+  return (
+    <MaterialIcons
+      size={35}
+      style={styles(Colors[colorScheme]).inputSearchIcon}
+      // eslint-disable-next-line react/jsx-props-no-spreading
+      {...props}
+    />
+  );
+}
+
+const styles = colorScheme =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      // alignItems: 'flex-start',
+      // justifyContent: 'flex-start',
+      // backgroundColor: 'transparent',
+      height: '100%',
+    },
+    inputSearch: {
+      height: 45,
+      backgroundColor: colorScheme.inputBackground,
+      color: colorScheme.inputText,
+      fontSize: 16,
+      fontFamily: 'poppins-regular',
+
+      paddingTop: 5,
+      paddingBottom: 0,
+      paddingLeft: 20,
+      paddingRight: 55,
+      borderRadius: 100,
+    },
+    inputSafeArea: {
+      position: 'relative',
+      marginLeft: 15,
+      marginRight: 15,
+      marginTop: 30,
+      marginBottom: 50,
+    },
+    inputSearchIcon: {
+      position: 'absolute',
+      right: 15,
+      top: 5,
+    },
+    noData: {
+      fontSize: 20,
+      textAlign: 'center',
+      marginVertical: 30,
+    },
+    itemTouchable: {
+      backgroundColor: 'transparent',
+      width: '100%',
+    },
+    itemInformation: {
+      backgroundColor: 'transparent',
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+      flexDirection: 'row',
+      flexWrap: 'nowrap',
+
+      paddingTop: 15,
+      paddingBottom: 15,
+      paddingLeft: 15,
+      paddingRight: 15,
+      minWidth: '100%',
+    },
+    itemQRIcon: {
+      paddingRight: 15,
+      paddingBottom: 20,
+      marginBottom: 0,
+    },
+    itemQRInfo: {
+      flex: 1,
+    },
+    itemType: {
+      fontWeight: 'bold',
+      fontSize: 16,
+      paddingBottom: 8,
+    },
+    itemDateTime: {
+      textAlign: 'right',
+      fontStyle: 'italic',
+      fontSize: 12,
+      paddingTop: 8,
+    },
+    separator: {
+      height: 1,
+      marginLeft: 'auto',
+      marginRight: 'auto',
+      width: '92%',
+    },
+  });

@@ -2,7 +2,7 @@ import { AnyAction, Reducer } from 'redux';
 import { ADD_QR_DATA } from './qrCodeTypes';
 
 const initialState = {
-  QRData: [],
+  QRData: [{ decodedInfo: 'Hello World', decodedDatetime: new Date() }],
 };
 
 const qrCodeReducer: Reducer = (state = initialState, action: AnyAction) => {
