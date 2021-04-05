@@ -162,22 +162,23 @@ export default function ReadQRScreenInfo({
             style={styles(Colors[colorScheme]).focusedContainer}
           >
             <QRFocusIcon style={styles(Colors[colorScheme]).qrFocusIcon} />
-
-            <Animated.View
-              style={[
-                styles(Colors[colorScheme]).animationLineStyle,
-                {
-                  transform: [
-                    {
-                      translateY: focusLineAnimation.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [20, animationLineHeight - 40],
-                      }),
-                    },
-                  ],
-                },
-              ]}
-            />
+            {!scanned && (
+              <Animated.View
+                style={[
+                  styles(Colors[colorScheme]).animationLineStyle,
+                  {
+                    transform: [
+                      {
+                        translateY: focusLineAnimation.interpolate({
+                          inputRange: [0, 1],
+                          outputRange: [20, animationLineHeight - 40],
+                        }),
+                      },
+                    ],
+                  },
+                ]}
+              />
+            )}
           </View>
         </BarCodeScanner>
       )}

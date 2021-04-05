@@ -208,6 +208,7 @@ const styles = (colorScheme: ColorScheme) =>
       borderRadius: 100,
     },
     inputSafeArea: {
+      backgroundColor: 'transparent',
       position: 'relative',
       marginLeft: 15,
       marginRight: 15,
@@ -243,6 +244,8 @@ const styles = (colorScheme: ColorScheme) =>
     list: {
       paddingLeft: 15,
       paddingRight: 15,
+      marginTop: 0,
+      marginBottom: 105,
     },
     itemTouchable: {
       backgroundColor: colorScheme.itemTouchableBackground,
